@@ -75,4 +75,48 @@ object ReadingQueryPlans {
                 +- *(4) Range (1, 20000000, step=2, splits=6)
    */
 
+  /**
+    * Exercises - read the Query Plans and try to understand the code that generated them.
+    */
+
+  // exercise 1
+  /*
+    == Physical Plan ==
+    *(1) Project [firstName#153, lastName#155, (cast(salary#159 as double) / 1.1) AS salary_EUR#168]
+    +- *(1) FileScan csv [firstName#153,lastName#155,salary#159] Batched: false, Format: CSV, Location: InMemoryFileIndex[file:/tmp/employees_headers.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<firstName:string,lastName:string,salary:string>
+   */
+  val employeesDF = spark.read.option("header", true).csv("/tmp/employees_headers.csv")
+  val empEur = employeesDF.selectExpr("firstName", "lastName", "salary / 1.1 as salary_EUR")
+
+  // exercise 2
+  /*
+  == Physical Plan ==
+  *(2) HashAggregate(keys=[dept#156], functions=[avg(cast(salary#181 as bigint))])
+    +- Exchange hashpartitioning(dept#156, 200)
+      +- *(1) HashAggregate(keys=[dept#156], functions=[partial_avg(cast(salary#181 as bigint))])
+        +- *(1) Project [dept#156, cast(salary#159 as int) AS salary#181]
+          +- *(1) FileScan csv [dept#156,salary#159] Batched: false, Format: CSV, Location: InMemoryFileIndex[file:/tmp/employees_headers.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<dept:string,salary:string>
+   */
+  val avgSals = employeesDF
+    .selectExpr("dept", "cast(salary as int) as salary")
+    .groupBy("dept")
+    .avg("salary")
+
+
+  // exercise 3
+  /*
+  == Physical Plan ==
+  *(5) Project [id#195L]
+    +- *(5) SortMergeJoin [id#195L], [id#197L], Inner
+      :- *(2) Sort [id#195L ASC NULLS FIRST], false, 0
+      :  +- Exchange hashpartitioning(id#195L, 200)
+      :     +- *(1) Range (1, 10000000, step=3, splits=6)
+      +- *(4) Sort [id#197L ASC NULLS FIRST], false, 0
+        +- Exchange hashpartitioning(id#197L, 200)
+          +- *(3) Range (1, 10000000, step=5, splits=6)
+   */
+  val d1 = spark.range(1, 10000000, 3)
+  val d2 = spark.range(1, 10000000, 5)
+  val j1 = d1.join(d2, "id")
+
 }
