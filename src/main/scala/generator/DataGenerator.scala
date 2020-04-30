@@ -32,17 +32,17 @@ object DataGenerator {
   // Laptop models generation - skewed data lectures
   /////////////////////////////////////////////////////////////////////////////////
 
-  val laptopModelsSet: Seq[LatopModel] = Seq(
-    LatopModel("Razer", "Blade"),
-    LatopModel("Alienware", "Area-51"),
-    LatopModel("HP", "Omen"),
-    LatopModel("Acer", "Predator"),
-    LatopModel("Asus", "ROG"),
-    LatopModel("Lenovo", "Legion"),
-    LatopModel("MSI", "Raider")
+  val laptopModelsSet: Seq[LaptopModel] = Seq(
+    LaptopModel("Razer", "Blade"),
+    LaptopModel("Alienware", "Area-51"),
+    LaptopModel("HP", "Omen"),
+    LaptopModel("Acer", "Predator"),
+    LaptopModel("Asus", "ROG"),
+    LaptopModel("Lenovo", "Legion"),
+    LaptopModel("MSI", "Raider")
   )
 
-  def randomLaptopModel(uniform: Boolean = false): LatopModel = {
+  def randomLaptopModel(uniform: Boolean = false): LaptopModel = {
     val makeModelIndex = if (!uniform && random.nextBoolean()) 0 else random.nextInt(laptopModelsSet.size) // 50% of the data is of the first kind
     laptopModelsSet(makeModelIndex)
   }
