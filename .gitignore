@@ -227,3 +227,6 @@ spark-warehouse/
 
 
 # End of https://www.gitignore.io/api/sbt,java,scala,spark,intellij
+
+# Daniel added
+src/main/resources/generated/
