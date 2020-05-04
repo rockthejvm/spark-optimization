@@ -71,6 +71,77 @@ object I2ITransformations {
     result.foreach(println)
   }
 
+  /**
+    * Exercises
+    */
+
+  def printTopMetricsEx1() = {
+    /*
+      Better than the "dummy" approach
+      - not sorting the entire RDD
+
+      Bad (worse than the optimal)
+      - sorting the entire partition
+      - forcing the iterator in memory - this can OOM your executors
+     */
+    val topMetrics = readMetrics()
+      .mapPartitions(_.toList.sortBy(_._2).take(LIMIT).toIterator)
+      .repartition(1)
+      .mapPartitions(_.toList.sortBy(_._2).take(LIMIT).toIterator)
+      .take(LIMIT)
+
+    topMetrics.foreach(println)
+  }
+
+  /*
+    Better than ex1
+    - extracting top 10 values per partition instead of sorting the entire partition
+
+    Bad because
+    - forcing toList can OOM your executors
+    - iterating over the list twice
+    - if the list is immutable, time spent allocating objects (and GC)
+   */
+  def printTopMetricsEx2() = {
+    val topMetrics = readMetrics()
+      .mapPartitions { records =>
+
+        implicit val ordering: Ordering[(String, Double)] = Ordering.by[(String, Double), Double](_._2)
+        val limitedCollection = new mutable.TreeSet[(String, Double)]()
+
+        records.toList.foreach { record =>
+          limitedCollection.add(record)
+          if (limitedCollection.size > LIMIT) {
+            limitedCollection.remove(limitedCollection.last)
+          }
+        }
+
+        // I've traversed the iterator
+
+        limitedCollection.toIterator
+      }
+      .repartition(1)
+      .mapPartitions { records =>
+
+        implicit val ordering: Ordering[(String, Double)] = Ordering.by[(String, Double), Double](_._2)
+        val limitedCollection = new mutable.TreeSet[(String, Double)]()
+
+        records.toList.foreach { record =>
+          limitedCollection.add(record)
+          if (limitedCollection.size > LIMIT) {
+            limitedCollection.remove(limitedCollection.last)
+          }
+        }
+
+        // I've traversed the iterator
+
+        limitedCollection.toIterator
+      }
+      .take(LIMIT)
+
+    topMetrics.foreach(println)
+  }
+
   def main(args: Array[String]): Unit = {
     printTopMetrics()
     printTopMetricsI2I()
