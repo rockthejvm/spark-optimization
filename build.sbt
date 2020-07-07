@@ -4,8 +4,7 @@ name := "spark-optimization"
 version := "0.1"
 
 scalaVersion := "2.12.4"
-val sparkVersion = "3.0.0-preview2"
-val vegasVersion = "0.3.11"
+val sparkVersion = "3.0.0"
 val postgresVersion = "42.2.2"
 
 resolvers ++= Seq(
