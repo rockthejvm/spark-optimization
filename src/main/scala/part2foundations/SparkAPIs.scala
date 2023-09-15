@@ -1,6 +1,7 @@
 package part2foundations
 
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.expr
 
 object SparkAPIs {
 
@@ -51,7 +52,7 @@ object SparkAPIs {
   rddTimes5.count() // ~20s
   // one stage
 
-  val dfTimes5 = df.select("id * 5 as id")
+  val dfTimes5 = df.select(expr("id * 5").as("id"))
   val dfTimes5Count = dfTimes5.selectExpr("count(*)")
   dfTimes5Count.show() // still 11-12s
   /*

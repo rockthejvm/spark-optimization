@@ -3,7 +3,7 @@ package part5rddtransformations
 import org.apache.spark.sql.SparkSession
 
 import scala.io.Source
-import scala.util.Random
+import scala.util.{Random, Using}
 
 object ByKeyFunctions {
 
@@ -22,7 +22,9 @@ object ByKeyFunctions {
     Scenario: assume we have a dataset with (word, occurrences) which we obtained after scraping a big document or website.
     We want to aggregate and sum all values under a single map.
    */
-  val words = Source.fromFile("/opt/spark-data/words.txt").getLines().toSeq
+  val words: Seq[String] = Using.resource(Source.fromFile("/opt/spark-data/words.txt")) { source =>
+    source.getLines().toSeq
+  }
 
   // generate data
   val random = new Random

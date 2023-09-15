@@ -59,7 +59,7 @@ object I2ITransformations {
 
       // I've traversed the iterator
 
-      limitedCollection.toIterator
+      limitedCollection.iterator
     }
 
     val topMetrics = readMetrics()
@@ -85,9 +85,9 @@ object I2ITransformations {
       - forcing the iterator in memory - this can OOM your executors
      */
     val topMetrics = readMetrics()
-      .mapPartitions(_.toList.sortBy(_._2).take(LIMIT).toIterator)
+      .mapPartitions(_.toList.sortBy(_._2).take(LIMIT).iterator)
       .repartition(1)
-      .mapPartitions(_.toList.sortBy(_._2).take(LIMIT).toIterator)
+      .mapPartitions(_.toList.sortBy(_._2).take(LIMIT).iterator)
       .take(LIMIT)
 
     topMetrics.foreach(println)
@@ -118,7 +118,7 @@ object I2ITransformations {
 
         // I've traversed the iterator
 
-        limitedCollection.toIterator
+        limitedCollection.iterator
       }
       .repartition(1)
       .mapPartitions { records =>
@@ -135,7 +135,7 @@ object I2ITransformations {
 
         // I've traversed the iterator
 
-        limitedCollection.toIterator
+        limitedCollection.iterator
       }
       .take(LIMIT)
 
