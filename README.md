@@ -10,6 +10,7 @@ This repository contains the code we wrote during [Rock the JVM's Spark Optimiza
 - install [Docker Desktop](https://docker.com)
 - either clone the repo or download as zip
 - open with IntelliJ as an SBT project
+- Windows users, you need to set up some Hadoop-related configs - use [this guide](/HadoopWindowsUserSetup.md) 
 
 As you open the project, the IDE will take care to download and apply the appropriate library dependencies.
 
@@ -40,39 +41,6 @@ Start by cloning this repository and checkout the `start` tag:
 ```
 git checkout start
 ```
-
-### How to run an intermediate state
-
-The repository was built while recording the lectures. Prior to each lecture, I tagged each commit so you can easily go back to an earlier state of the repo!
-
-The tags are as follows:
-
-* `start`
-* `1.1-scala-recap`
-* `1.2-spark-recap`
-* `2.2-spark-job-anatomy`
-* `2.3-query-plans`
-* `2.3-query-plans-exercises`
-* `2.4-spark-ui`
-* `2.5-spark-apis`
-* `2.6-deploy-config`
-* `3.1-join-mechanics`
-* `3.2-broadcast-joins`
-* `3.3-column-pruning`
-* `3.4-prepartitioning`
-* `3.5-bucketing`
-* `3.6-skewed-joins`
-* `4.1-rdd-joins`
-* `4.2-cogroup`
-* `4.3-rdd-broadcast`
-* `4.4-rdd-skews`
-* `5.1-rdd-transformations`
-* `5.2-by-key-ops`
-* `5.3-reusing-objects`
-* `5.5-i2i-transformations`
-* `5.6-i2i-transformations-exercises`
-
-When you watch a lecture, you can `git checkout` the appropriate tag and the repo will go back to the exact code I had when I started the lecture.
 
 ### For questions or suggestions
 
